@@ -18,6 +18,9 @@ public class Item {
     private Integer category;
     @Column(name = "item_name",length = 20)
     private String itemName;
+    //消費期限があるのか
+    @Column(name = "expiration")
+    private Boolean expiration;
 
 
 }

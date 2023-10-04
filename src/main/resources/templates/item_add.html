@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="head :: head(title = 'アイテム追加',scripts = ~{}, links = ~{})">
+</head>
+<body>
+<div class="col-sm-5">
+    <div class="page-header">
+        <h3>アイテム登録画面</h3>
+    </div>
+    <form method="post" th:action="@{/item/add}">
+        <table class="table table-bordered table-hover" style="width: 700px">
+            <tr>
+                <th class="active col-sm-3">カテゴリー</th>
+
+            <td>
+                <div class="form-group">
+                    <select class="form-select form-select-lg mb-3" aria-label="Default select example">
+                        <option th:each="item : ${category}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key == 0}"></option>
+                    </select>
+                </div>
+            </td>
+            </tr>
+            <tr>
+                <th class="active">商品名</th>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+</body>
+</html>

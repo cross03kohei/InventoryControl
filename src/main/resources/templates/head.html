@@ -1,0 +1,12 @@
+<head xmlns:th="http://www.thymeleaf.org" th:fragment="head_fragment(title, scripts, links)">
+  <meta charset="UTF-8">
+  <title th:text="${title}"></title>
+  <!-- CSS読み込み -->
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.2/css/bootstrap.min.css}"/>
+  <!-- JS読み込み -->
+  <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+  <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+  <!-- 各画面専用のscript,cssを定義します -->
+  <th:block th:replace="${links}" />
+  <th:block th:replace="${scripts}" />
+</head>
