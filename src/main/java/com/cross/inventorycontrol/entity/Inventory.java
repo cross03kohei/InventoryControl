@@ -13,13 +13,10 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "stock")
+    private Integer stock;
 
-    @Column(name = "expiration_date", length = 20)
-    private String expirationDate;
-
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "item_id")
-    private Item item;
+    private ItemEntity item;
 }

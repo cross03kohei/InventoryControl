@@ -4,13 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Entity
 @Table(name = "item")
 @Getter
 @Setter
-public class Item {
+public class ItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -20,7 +18,10 @@ public class Item {
     private String itemName;
     //消費期限があるのか
     @Column(name = "expiration")
-    private Boolean expiration;
+    private Boolean isExpiration;
+    //下限
+    @Column(name = "lower_limit")
+    private Integer lowerLimit;
 
 
 }

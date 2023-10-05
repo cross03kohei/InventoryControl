@@ -10,5 +10,7 @@ public class ItemCategory {
         item.put(1,"調味料");
         item.put(2,"お菓子");
         item.put(3,"生活用品");
+        item.put(4,"防災グッズ");
+        item.put(5,"その他");
     }
 }

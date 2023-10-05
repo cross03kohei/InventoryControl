@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>ホーム</title>
+<head th:replace="head :: head(title = 'ホーム',scripts = ~{}, links = ~{})">
 </head>
 <body>
 <a th:href="@{/item/add}">アイテム追加</a>
+<table class="table table-bordered table-hover table-striped">
+    <tr>
+        <th class="info">カテゴリー</th><th class="info">商品名</th>
+        <th class="info">在庫数</th><th class="info">下限</th>
+        <th class="info"></th>
+    </tr>
+    <tbody>
+        <tr th:each=" item : ${items}">
+            <td th:text="${category.get(item.category)}"></td>
+            <td th:text="${item.itemName}"></td>
+            <td th:text="${item.stock}"></td>
+            <td th:text="${item.lowerLimit}"></td>
+            <td>
+                <a class="btn btn-primary" th:href="@{'/item/' + ${item.id}}">詳細</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
 </body>
 </html>
