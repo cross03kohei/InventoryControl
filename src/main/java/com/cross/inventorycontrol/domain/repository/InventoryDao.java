@@ -2,6 +2,7 @@ package com.cross.inventorycontrol.domain.repository;
 
 import com.cross.inventorycontrol.domain.model.Inventory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ public class InventoryDao {
     /**
      *入庫の登録処理
      */
-    public int insertReceive(Inventory inventory){
+    public int insertReceive(Inventory inventory) throws DataAccessException {
         return jdbc.update("INSERT INTO receive(receive_quantity, date_receive, " +
                 "price, inventory_id)VALUES(?,?,?,?)",
                 inventory.getQuantity(),
@@ -21,7 +22,7 @@ public class InventoryDao {
                 inventory.getPrice(),
                 inventory.getInventoryId());
     }
-    public int plusInventory(Inventory inventory){
+    public int plusInventory(Inventory inventory) throws DataAccessException {
         return jdbc.update("UPDATE inventory SET " +
                 "stock = stock + ? WHERE inventory.id = ?",
                 inventory.getQuantity(),

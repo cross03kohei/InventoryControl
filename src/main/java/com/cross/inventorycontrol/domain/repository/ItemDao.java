@@ -19,7 +19,10 @@ public class ItemDao {
         int rowNumber = jdbc.update("INSERT INTO item(category," +
                 "item_name,expiration,lower_limit)" +
                 "VALUES(?,?,?,?)",
-                item.getCategory(),item.getItemName(),item.getExpiration(),item.getLowerLimit());
+                item.getCategory(),
+                item.getItemName(),
+                item.getExpiration(),
+                item.getLowerLimit());
         return rowNumber;
     }
     public int insertInventory(Integer id, Integer stock){
