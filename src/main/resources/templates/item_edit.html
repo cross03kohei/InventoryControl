@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="head :: head(title = '商品編集',scripts = ~{}, links = ~{})">
+</head>
+<body>
+<div class="col-sm-5">
+  <div class="page-header">
+    <h3>アイテム編集画面</h3>
+  </div>
+  <form method="post" th:action="@{/item/edit}" th:object="${editItemForm}">
+    <table class="table table-bordered table-hover" style="width: 700px">
+      <tr>
+        <th class="active col-sm-3">カテゴリー</th>
+        <td>
+          <div class="form-group">
+            <select class="form-select form-select-lg mb-3" aria-label="Default select example" th:field="*{category}">
+              <option th:each="item : ${category}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key == 0}"></option>
+            </select>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th class="active">商品名</th>
+        <td>
+          <div class="form-group" th:classappend="${#fields.hasErrors('itemName')} ? 'has-error'">
+            <input type="text" class="form-control" th:field="*{itemName}">
+            <span class="text-danger" th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}">
+                                itemName error
+            </span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th class="active">消費期限の有無</th>
+        <td>
+          <div class="form-group">
+            <select class="form-select form-select-lg mb-3" aria-label="Default select example" th:field="*{isExpiration}">
+              <option value="true">消費期限あり</option>
+              <option value="false">消費期限なし</option>
+            </select>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th class="form-group">下限</th>
+        <td>
+          <div class="form-group" th:classappend="${#fields.hasErrors('lowerLimit')} ? 'has-error'">
+            <input type="text" class="form-control" th:field="*{lowerLimit}">
+            <span class="text-danger" th:if="${#fields.hasErrors('lowerLimit')}" th:errors="*{lowerLimit}">
+                                limit error
+            </span>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <input type="hidden" th:field="*{id}">
+    <button class="btn btn-primary" type="submit">登録</button>
+  </form>
+  <a class="btn btn-success" th:href="@{'/item/' + ${itemId}}">詳細に戻る</a>
+</div>
+</body>
+</html>

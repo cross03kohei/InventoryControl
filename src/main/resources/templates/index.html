@@ -4,12 +4,14 @@
 </head>
 <body>
 <a th:href="@{/item/add}">アイテム追加</a>
-<table class="table table-bordered table-hover table-striped">
+<table class="table table-bordered table-hover">
+    <thead class="thead-dark">
     <tr>
-        <th class="info">カテゴリー</th><th class="info">商品名</th>
-        <th class="info">在庫数</th><th class="info">下限</th>
-        <th class="info"></th>
+        <th scope="col">カテゴリー</th><th class="info">商品名</th>
+        <th scope="col">在庫数</th><th class="info">下限</th>
+        <th scope="col"></th>
     </tr>
+    </thead>
     <tbody>
         <tr th:each=" item : ${items}">
             <td th:text="${category.get(item.category)}"></td>

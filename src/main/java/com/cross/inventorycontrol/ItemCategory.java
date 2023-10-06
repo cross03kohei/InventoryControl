@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class ItemCategory {
     public static Map<Integer,String> item = new HashMap<>();
+    public static Map<Boolean, String> status = new HashMap<>();
     static {
         item.put(0,"食べ物");
         item.put(1,"調味料");
@@ -12,5 +13,8 @@ public class ItemCategory {
         item.put(3,"生活用品");
         item.put(4,"防災グッズ");
         item.put(5,"その他");
+
+        status.put(true,"入庫");
+        status.put(false,"出庫");
     }
 }

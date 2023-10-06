@@ -12,15 +12,24 @@ public class ItemService {
     @Autowired
     ItemDao dao;
     public boolean insert(Item item){
+        Integer stock = 0;
+        if(item.getStock() != null){
+            stock = item.getStock();
+        }
         int rowNumber = dao.insertOne(item);
         Integer id = dao.lastInsertId();    //insertしたIDを取得
-        rowNumber = dao.insertInventory(id);
+        rowNumber = dao.insertInventory(id,stock);
+        return rowNumber > 0;
+    }
+    public boolean updateItem(Item item){
+        int rowNumber = dao.updateItem(item);
         return rowNumber > 0;
     }
     public List<Item> selectMany(){
         return dao.selectMany();
     }
-    public Item selectOne(String id){
+    public Item selectOne(Integer id){
         return dao.selectOne(id);
     }
+    public Integer findByInventoryId(Integer id){ return dao.findInventoryId(id);}
 }

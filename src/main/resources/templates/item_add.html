@@ -53,6 +53,18 @@
                     </div>
                 </td>
             </tr>
+            <tr>
+                <th class="active">在庫数(空だと0)</th>
+
+                <td>
+                    <div class="form-group" th:classappend="${#fields.hasErrors('stock')} ? 'has-error'">
+                        <input type="text" class="form-control" th:field="*{stock}">
+                        <span class="text-danger" th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}">
+                            stock error
+                        </span>
+                    </div>
+                </td>>
+            </tr>
         </table>
         <button class="btn btn-primary" type="submit">登録</button>
     </form>
