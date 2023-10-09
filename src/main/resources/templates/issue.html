@@ -3,6 +3,47 @@
 <head th:replace="head :: head(title = '出庫',scripts = ~{}, links = ~{})">
 </head>
 <body>
+<div class="receive-body">
+    <div class="item">
+        <table class="table table-bordered table-hover" style="width: 500px">
+            <tr>
+                <th class="active">カテゴリー</th>
+                <td th:text="${category.get(item.category)}"></td>
+            </tr>
+            <tr>
+                <th class="active">商品名</th>
+                <td th:text="${item.itemName}"></td>
+            </tr>
+            <tr>
+                <th class="active">在庫数</th>
+                <td th:text="${item.stock}"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="receive-form">
+        <form th:action="@{/inventory/issue}" method="post" th:object="${issueForm}">
+            <table class="table table-bordered table-hover" style="width: 500px">
+                <tr>
+                    <th class="active">出庫数</th>
+                    <td>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('issueQuantity')} ? 'has-error'">
+                            <input type="text" th:field="*{issueQuantity}" class="form-control">
+                            <span class="text-danger" th:if="${#fields.hasErrors('issueQuantity')}" th:errors="*{issueQuantity}">
+                                issueQuantity error
+                        </span>
 
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <p th:text="${result}" class="text-danger"></p>
+            <input type="hidden" th:field="*{inventoryId}">
+            <input type="hidden" th:field="*{itemId}">
+
+            <button type="submit" class="btn btn-primary">出庫</button>
+            <button type="button" class="btn btn-danger" onclick="history.back()">戻る</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>
