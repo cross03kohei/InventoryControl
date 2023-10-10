@@ -69,6 +69,15 @@ public class ItemDao {
                 "WHERE item_id = ?",id);
         return (Integer) map.get("id");
     }
+
+    /**
+     *inventoryIdからitemIdを取得
+     */
+    public Integer findItemId(Integer id) throws DataAccessException {
+        Map<String, Object> map = jdbc.queryForMap("SELECT item_id FROM inventory " +
+                "WHERE inventory.id = ?", id);
+        return (Integer) map.get("item_id");
+    }
     private Item createItem(Map<String, Object> map){
         Item i = new Item();
         i.setId((Integer) map.get("id"));

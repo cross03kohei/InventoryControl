@@ -26,16 +26,22 @@
         <tr>
           <th class="active">入庫数</th>
           <td>
-            <div class="form-group">
+            <div class="form-group" th:classappend="${#fields.hasErrors('receiveQuantity')} ? 'has-error'">
               <input type="text" th:field="*{receiveQuantity}" class="form-control">
+              <span class="text-danger" th:if="${#fields.hasErrors('receiveQuantity')}" th:errors="*{receiveQuantity}">
+                  receiveQuantity error
+              </span>
             </div>
           </td>
         </tr>
         <tr>
           <th class="form-group">一個あたりの値段</th>
           <td>
-            <div class="form-group">
+            <div class="form-group" th:classappend="${#fields.hasErrors('price')} ? 'has-error'">
               <input type="text" th:field="*{price}" class="form-control">
+              <span class="text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">
+                  price error
+              </span>
             </div>
           </td>
         </tr>

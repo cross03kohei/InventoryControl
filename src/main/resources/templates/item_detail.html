@@ -26,6 +26,23 @@
     <a class="btn btn-primary" th:href="@{'/inventory/receive/' + ${item.id}}">入庫</a>
     <a class="btn btn-success" th:href="@{'/inventory/issue/' + ${item.id}}">出庫</a>
     <a class="btn btn-secondary" th:href="@{'edit/' + ${item.id}}">編集</a>
-
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">日付</th><th class="info">数量</th>
+            <th scope="col">在庫数</th><th></th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each=" history : ${histories}">
+                <td th:text="${history.date}"></td>
+                <td th:text="${history.number}"></td>
+                <td th:text="${history.stock}"></td>
+                <td>
+                    <a th:href="@{'/inventory/edit/' + ${history.id}}" class="btn btn-primary">編集</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>

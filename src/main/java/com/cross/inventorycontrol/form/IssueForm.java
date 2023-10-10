@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class IssueForm {
+    private Integer issueId;
     private Integer ItemId;
     private Integer InventoryId;
     @NotNull

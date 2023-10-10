@@ -2,7 +2,9 @@ package com.cross.inventorycontrol.controller;
 
 import com.cross.inventorycontrol.ItemCategory;
 import com.cross.inventorycontrol.domain.model.Inventory;
+import com.cross.inventorycontrol.domain.model.Issue;
 import com.cross.inventorycontrol.domain.model.Item;
+import com.cross.inventorycontrol.domain.model.Receive;
 import com.cross.inventorycontrol.domain.service.InventoryService;
 import com.cross.inventorycontrol.domain.service.ItemService;
 import com.cross.inventorycontrol.form.IssueForm;
@@ -32,7 +34,7 @@ public class InventoryController {
         Integer inventoryId = itemService.findByInventoryId(id); //inventoryのIdを取得
         if(form.getItemId() == null ){
             form.setInventoryId(inventoryId);
-            form.setItemId(Integer.valueOf(id));
+            form.setItemId(id);
         }
 
         model.addAttribute("item",item);
@@ -82,6 +84,69 @@ public class InventoryController {
         String itemId = String.valueOf(form.getItemId());
         boolean result = service.issue(form);
         return "redirect:/item/" + itemId;
+    }
+
+    /**
+     *
+     * @param id ＋だったら入庫 ーの場合は出庫になる
+     */
+    @GetMapping("/edit/{id}")
+    public String editInventory(@PathVariable("id")Integer id, Model model){
+        model.addAttribute("category",ItemCategory.item);
+        if(id > 0){
+            Receive receive = service.findReceive(id);
+            Integer itemId = itemService.findByItemId(receive.getInventoryId());  //inventoryIdからitemIdを取得
+            Item item = itemService.selectOne(itemId);
+            ReceiveForm form = setReceive(receive, itemId);
+            model.addAttribute("item",item);
+            model.addAttribute("receiveForm",form);
+            return "receive_edit";
+        }else{
+            Integer issueId = id * -1; //ーを＋にする
+            Issue issue = service.findIssue(issueId);
+            Integer itemId = itemService.findByItemId(issue.getInventoryId());
+            Item item = itemService.selectOne(itemId);
+            IssueForm form = setIssue(issue);
+            model.addAttribute("item",item);
+            model.addAttribute("issueForm",form);
+            return "issue_edit";
+        }
+    }
+    @PostMapping("receive/edit")
+    public String postEditReceive(Model model, @ModelAttribute @Validated ReceiveForm form,
+                                  BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            return editReceive(model, form);
+        }
+        return "redirect:/item/" + form.getItemId();
+    }
+    //編集した際にエラーがあった際はこちらで受け取る
+    @GetMapping
+    public String editReceive(Model model, @ModelAttribute ReceiveForm form){
+        Item item = itemService.selectOne(form.getItemId());
+        model.addAttribute("category", ItemCategory.item);
+        model.addAttribute("receiveForm",form);
+        return "receive_edit";
+    }
+    private ReceiveForm setReceive(Receive r, Integer itemId) {
+        ReceiveForm form = new ReceiveForm();
+        form.setReceiveId(r.getId());
+        form.setInventoryId(r.getInventoryId());
+        form.setPrice(r.getPrice());
+        form.setReceiveQuantity(r.getQuantity());
+        form.setItemId(itemId);
+        return form;
+    }
+
+    /**
+     *Formに値を詰なおす 編集用
+     */
+    private IssueForm setIssue(Issue i) {
+        IssueForm form = new IssueForm();   //返却用
+        form.setIssueId(i.getId());
+        form.setInventoryId(i.getInventoryId());
+        form.setIssueQuantity(i.getQuantity());
+        return form;
     }
 
 }

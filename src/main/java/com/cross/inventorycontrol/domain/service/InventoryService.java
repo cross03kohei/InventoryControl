@@ -1,6 +1,8 @@
 package com.cross.inventorycontrol.domain.service;
 
 import com.cross.inventorycontrol.domain.model.Inventory;
+import com.cross.inventorycontrol.domain.model.Issue;
+import com.cross.inventorycontrol.domain.model.Receive;
 import com.cross.inventorycontrol.domain.repository.InventoryDao;
 import com.cross.inventorycontrol.form.IssueForm;
 import com.cross.inventorycontrol.form.ReceiveForm;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class InventoryService {
@@ -31,6 +34,16 @@ public class InventoryService {
         rowNumber += dao.minusInventory(inventory);
         return rowNumber > 1;
     }
+    public List<Receive> findAllReceive(Integer id) {
+        return dao.findAllReceive(id);
+    }
+    public List<Issue> findAllIssue(Integer id) {
+        return dao.findAllIssue(id);
+    }
+    public Receive findReceive(Integer id){
+        return dao.findReceive(id);
+    }
+    public Issue findIssue(Integer id){ return dao.findIssue(id);}
     private Inventory setIssueForm(IssueForm form){
         Inventory inventory = new Inventory();
         inventory.setInventoryId(form.getInventoryId());

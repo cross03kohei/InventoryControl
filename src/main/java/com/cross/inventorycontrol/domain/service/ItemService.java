@@ -32,4 +32,5 @@ public class ItemService {
         return dao.selectOne(id);
     }
     public Integer findByInventoryId(Integer id){ return dao.findInventoryId(id);}
+    public Integer findByItemId(Integer id) { return dao.findItemId(id);}
 }

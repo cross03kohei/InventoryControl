@@ -5,11 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class History {
+public class Issue {
     private Integer id;
+    private Integer inventoryId;
     private String date;
-    private String status;
-    private String number;
     private Integer quantity;
-    private Integer stock;
 }
