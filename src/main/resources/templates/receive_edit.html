@@ -19,15 +19,16 @@
                 <td th:text="${item.stock}"></td>
             </tr>
         </table>
+        <p class="text-danger" th:text="${result}"></p>
     </div>
     <div class="receive-form">
-        <form th:action="@{/inventory/receive}" method="post" th:object="${receiveForm}">
+        <form th:action="@{/inventory/receive/edit}" method="post" th:object="${receiveForm}">
             <table class="table table-bordered table-hover" style="width: 500px">
                 <tr>
                     <th class="active">入庫数</th>
                     <td>
                         <div class="form-group" th:classappend="${#fields.hasErrors('receiveQuantity')} ? 'has-error'">
-                            <input type="text" th:field="*{receiveQuantity}" class="form-control">
+                            <input type="number" th:field="*{receiveQuantity}" class="form-control">
                             <span class="text-danger" th:if="${#fields.hasErrors('receiveQuantity')}" th:errors="*{receiveQuantity}">
                                 receiveQuantity error
                         </span>
@@ -38,7 +39,7 @@
                     <th class="form-group">一個あたりの値段</th>
                     <td>
                         <div class="form-group" th:classappend="${#fields.hasErrors('price')} ? 'has-error'">
-                            <input type="text" th:field="*{price}" class="form-control">
+                            <input type="number" th:field="*{price}" class="form-control">
                             <span class="text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">
                                 price error
                         </span>
@@ -48,6 +49,7 @@
             </table>
             <input type="hidden" th:field="*{inventoryId}">
             <input type="hidden" th:field="*{itemId}">
+            <input type="hidden" th:field="*{receiveId}">
             <button type="submit" class="btn btn-primary">入庫</button>
             <button type="button" class="btn btn-danger" onclick="history.back()">戻る</button>
         </form>

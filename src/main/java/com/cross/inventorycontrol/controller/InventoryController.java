@@ -118,6 +118,19 @@ public class InventoryController {
         if (bindingResult.hasErrors()){
             return editReceive(model, form);
         }
+        Integer stock = service.findStock(form.getInventoryId());
+        Receive receive = service.findReceive(form.getReceiveId());
+        Integer difference = receive.getQuantity() - form.getReceiveQuantity();
+        if(stock < difference) {
+            model.addAttribute("result","在庫数が0になります");
+            return editReceive(model, form);
+        }
+        if(difference > 0) {
+            Integer stockEdit = stock - difference;
+        }else{
+            Integer stockEdit = stock + difference * -1;
+            System.out.println(stockEdit);
+        }
         return "redirect:/item/" + form.getItemId();
     }
     //編集した際にエラーがあった際はこちらで受け取る
@@ -126,6 +139,7 @@ public class InventoryController {
         Item item = itemService.selectOne(form.getItemId());
         model.addAttribute("category", ItemCategory.item);
         model.addAttribute("receiveForm",form);
+        model.addAttribute("item",item);
         return "receive_edit";
     }
     private ReceiveForm setReceive(Receive r, Integer itemId) {

@@ -43,6 +43,7 @@ public class InventoryService {
     public Receive findReceive(Integer id){
         return dao.findReceive(id);
     }
+    public Integer findStock(Integer inventoryId){ return dao.findStock(inventoryId);}
     public Issue findIssue(Integer id){ return dao.findIssue(id);}
     private Inventory setIssueForm(IssueForm form){
         Inventory inventory = new Inventory();
