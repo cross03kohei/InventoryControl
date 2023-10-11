@@ -27,6 +27,10 @@ public class InventoryController {
     ItemService itemService;
     @Autowired
     InventoryService service;
+
+    /**
+     *入庫の登録画面の表示
+     */
     @GetMapping("/receive/{id}")
     public String getReceive(@ModelAttribute ReceiveForm form,
                              Model model, @PathVariable("id")Integer id){
@@ -42,6 +46,9 @@ public class InventoryController {
         return "receive";
     }
 
+    /**
+     *出庫の登録の際のマッピング
+     */
     @PostMapping("/receive")
     public String postReceive(@ModelAttribute @Validated ReceiveForm form,
                               BindingResult bindingResult,Model model){
@@ -52,6 +59,10 @@ public class InventoryController {
         String id = String.valueOf(form.getItemId());
         return "redirect:/item/" + id;
     }
+
+    /**
+     *出庫登録画面の表示を行うマッピング
+     */
     @GetMapping("/issue/{id}")
     public String getIssue(@ModelAttribute IssueForm form,@PathVariable("id")Integer itemId,
                            Model model){
@@ -106,7 +117,7 @@ public class InventoryController {
             Issue issue = service.findIssue(issueId);
             Integer itemId = itemService.findByItemId(issue.getInventoryId());
             Item item = itemService.selectOne(itemId);
-            IssueForm form = setIssue(issue);
+            IssueForm form = setIssue(issue, itemId);
             model.addAttribute("item",item);
             model.addAttribute("issueForm",form);
             return "issue_edit";
@@ -125,7 +136,7 @@ public class InventoryController {
         }
         Integer stock = service.findStock(form.getInventoryId());
         Receive receive = service.findReceive(form.getReceiveId()); //formとの値の差を計算する　更新にも使う
-        Integer difference = receive.getQuantity() - form.getReceiveQuantity();
+        Integer difference = receive.getQuantity() - form.getReceiveQuantity(); //もとの出庫数 -　編集した出庫数
         if(stock < difference) {
             model.addAttribute("result","在庫数が0になります");
             return editReceive(model, form);
@@ -143,9 +154,8 @@ public class InventoryController {
         return "redirect:/item/" + form.getItemId();
     }
     /**
-     * 編集の際にエラーがあった際はこちらで受け取る
+     * 入庫の更新の際にバリデーションに引っかかった際こちらで受け取る
      */
-    @GetMapping
     public String editReceive(Model model, @ModelAttribute ReceiveForm form){
         Item item = itemService.selectOne(form.getItemId());
         model.addAttribute("category", ItemCategory.item);
@@ -153,6 +163,40 @@ public class InventoryController {
         model.addAttribute("item",item);
         return "receive_edit";
     }
+
+    /**
+     *出庫の更新処理
+     */
+    @PostMapping("/issue/edit")
+    public String postEditIssue(Model model, @ModelAttribute @Validated IssueForm form,
+                                BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return editIssue(model, form);
+        }
+        Issue issue = service.findIssue(form.getIssueId());     //編集用
+        Integer stock = service.findStock(form.getInventoryId());
+        int difference = issue.getQuantity() - form.getIssueQuantity(); //もとの出庫数 -　編集した出庫数
+        //差数が在庫数を上回るとメッセージと共に編集画面へ
+        if(difference < 0 && stock < difference * -1 ){
+            model.addAttribute("result","在庫数が0になります");
+            return editIssue(model, form);
+        }
+        issue.setQuantity(form.getIssueQuantity());
+        int stockEdit = stock + difference;     //更新する在庫数
+        boolean result = service.updateIssue(issue, form.getInventoryId(), stockEdit);
+        return "redirect:/item/" + form.getItemId();
+    }
+
+    /**
+     * 出庫の更新の際にバリデーションに引っかかった際こちらで受け取る
+     */
+    public String editIssue(Model model, @ModelAttribute IssueForm form){
+        Item item = itemService.selectOne(form.getItemId());
+        model.addAttribute("category",ItemCategory.item);
+        model.addAttribute("item",item);
+        return "issue_edit";
+    }
+
     private ReceiveForm setReceive(Receive r, Integer itemId) {
         ReceiveForm form = new ReceiveForm();
         form.setReceiveId(r.getId());
@@ -163,14 +207,16 @@ public class InventoryController {
         return form;
     }
 
+
     /**
      *Formに値を詰なおす 編集用
      */
-    private IssueForm setIssue(Issue i) {
+    private IssueForm setIssue(Issue i, Integer itemId) {
         IssueForm form = new IssueForm();   //返却用
         form.setIssueId(i.getId());
         form.setInventoryId(i.getInventoryId());
         form.setIssueQuantity(i.getQuantity());
+        form.setItemId(itemId);
         return form;
     }
 

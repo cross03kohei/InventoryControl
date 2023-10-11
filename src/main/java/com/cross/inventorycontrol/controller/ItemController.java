@@ -28,11 +28,15 @@ public class ItemController {
     ItemService itemService;
     @Autowired
     InventoryService inventoryService;
+    //商品登録の際の画面表示を行う
     @GetMapping("/add")
     public String getItem(@ModelAttribute ItemForm form, Model model){
         model.addAttribute("category", ItemCategory.item);
         return "item_add";
     }
+    /**
+     * 商品登録の処理を行う
+     */
     @PostMapping("/add")
     public String postItem(@ModelAttribute @Validated ItemForm form,
                            BindingResult bindingResult, Model model){
@@ -48,6 +52,10 @@ public class ItemController {
         }
         return "redirect:/";
     }
+
+    /**
+     *商品の詳細と在庫の履歴を表示
+     */
     @GetMapping("/{id}")
     public String getItemDetail(Model model, @PathVariable("id")Integer id){
         if(id != null && id > 0){
@@ -62,6 +70,10 @@ public class ItemController {
         }
         return "item_detail";
     }
+
+    /**
+     *商品の編集画面の表示
+     */
     @GetMapping("/edit/{id}")
     public String getEditItem(Model model, @ModelAttribute EditItemForm form,
                               @PathVariable("id")Integer id){
@@ -75,6 +87,10 @@ public class ItemController {
         model.addAttribute("category",ItemCategory.item);
         return "item_edit";
     }
+
+    /**
+     *商品の更新処理を行う
+     */
     @PostMapping("/edit")
     public String editItem(Model model,@ModelAttribute @Validated EditItemForm form,
                            BindingResult bindingResult){
@@ -121,7 +137,7 @@ public class ItemController {
     }
 
     /**
-     *在庫数の履歴をだすためのメソッド
+     *在庫数の履歴をだすためのメソッド　用意した履歴のモデルに順番に計算しつつ詰めていく
      */
     private List<History> calc(List<Receive> r, List<Issue> i) {
         List<History> histories = new ArrayList<>();    //返却用

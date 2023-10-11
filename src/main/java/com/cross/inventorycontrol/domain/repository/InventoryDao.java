@@ -5,9 +5,7 @@ import com.cross.inventorycontrol.domain.model.Issue;
 import com.cross.inventorycontrol.domain.model.Receive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -30,6 +28,10 @@ public class InventoryDao {
                 inventory.getPrice(),
                 inventory.getInventoryId());
     }
+
+    /**
+     *出庫の登録処理
+     */
     public int insertIssue(Inventory inventory) throws DataAccessException {
         return jdbc.update("INSERT INTO issue(issue_quantity, date_issue, inventory_id)" +
                 "VALUES(?, ?, ?)",
@@ -37,18 +39,29 @@ public class InventoryDao {
                 inventory.getDate(),
                 inventory.getInventoryId());
     }
+    /**
+     *入庫登録の際の在庫の更新処理　在庫数を足す
+     */
     public int plusInventory(Inventory inventory) throws DataAccessException {
         return jdbc.update("UPDATE inventory SET " +
                 "stock = stock + ? WHERE inventory.id = ?",
                 inventory.getQuantity(),
                 inventory.getInventoryId());
     }
+
+    /**
+     *出庫登録の際の在庫の更新処理　在庫数をひく
+     */
     public int minusInventory(Inventory inventory) throws DataAccessException {
         return jdbc.update("UPDATE inventory SET " +
                 "stock = stock - ? WHERE inventory.id = ?",
                 inventory.getQuantity(),
                 inventory.getInventoryId());
     }
+
+    /**
+     *在庫に紐づく入庫のテーブルを全件取得
+     */
     public List<Receive> findAllReceive(Integer id) throws DataAccessException {
         List<Map<String, Object>> getList = jdbc.queryForList("SELECT * FROM " +
                 "receive WHERE inventory_id = ?", id);
@@ -63,6 +76,10 @@ public class InventoryDao {
         }
         return receives;
     }
+
+    /**
+     *在庫に紐づく出庫のテーブルを全件取得
+     */
     public List<Issue> findAllIssue(Integer id) throws DataAccessException {
         List<Map<String, Object>> getList = jdbc.queryForList("SELECT * FROM issue " +
                 "WHERE inventory_id = ?",id);
@@ -76,6 +93,10 @@ public class InventoryDao {
         }
         return issues;
     }
+
+    /**
+     *入庫の履歴を一件取得　引数はreceive.id
+     */
     public Receive findReceive(Integer id) throws DataAccessException {
         Map<String, Object> map = jdbc.queryForMap("SELECT * FROM receive " +
                 "WHERE receive.id = ?", id);
@@ -86,6 +107,10 @@ public class InventoryDao {
         receive.setPrice((Integer) map.get("price"));
         return receive;
     }
+
+    /**
+     *出庫の履歴を一件取得　引数はitem.id
+     */
     public Issue findIssue(Integer id) throws DataAccessException {
         Map<String, Object> map = jdbc.queryForMap("SELECT * FROM issue " +
                 "WHERE issue.id = ?", id);
@@ -116,6 +141,17 @@ public class InventoryDao {
                 receive.getQuantity(),
                 receive.getPrice(),
                 receive.getId());
+    }
+
+    /**
+     *出庫の更新処理
+     */
+    public int updateIssue(Issue issue) throws DataAccessException {
+        return jdbc.update("UPDATE issue SET " +
+                "issue_quantity = ? " +
+                "WHERE issue.id = ?",
+                issue.getQuantity(),
+                issue.getId());
     }
     /**
      *在庫数を取得
