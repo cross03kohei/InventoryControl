@@ -161,4 +161,14 @@ public class InventoryDao {
                 "WHERE inventory.id = ?", inventoryId);
         return (Integer) map.get("stock");
     }
+
+    /**
+     *入庫IDから在庫IDを持ってくる
+     */
+    public Integer findInventoryIdByReceiveId(Integer receiveId) throws DataAccessException {
+        Map<String, Object> map = jdbc.queryForMap("SELECT inventory_id FROM receive " +
+                "WHERE receive.id = ?",
+                receiveId);
+        return (Integer) map.get("inventory_id");
+    }
 }

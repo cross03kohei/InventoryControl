@@ -51,8 +51,31 @@
             <input type="hidden" th:field="*{itemId}">
             <input type="hidden" th:field="*{receiveId}">
             <button type="submit" class="btn btn-primary">入庫</button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    削除
+            </button>
             <button type="button" class="btn btn-danger" onclick="history.back()">戻る</button>
         </form>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/inventory/receive/delete}" method="post">
+                    <div class="modal-body">
+                        <h5>削除しますか？</h5>
+                        <input type="hidden" name="id" th:value="${receiveId}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                        <button type="submit" class="btn btn-danger">削除</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
 </div>

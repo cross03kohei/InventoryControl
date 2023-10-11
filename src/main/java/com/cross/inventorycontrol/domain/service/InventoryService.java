@@ -119,4 +119,7 @@ public class InventoryService {
         i.setDate(now.format(f));
         return i;
     }
+    public Integer findInventoryIdByReceiveId(Integer receiveId) {
+        return dao.findInventoryIdByReceiveId(receiveId);
+    }
 }

@@ -111,6 +111,7 @@ public class InventoryController {
             ReceiveForm form = setReceive(receive, itemId);
             model.addAttribute("item",item);
             model.addAttribute("receiveForm",form);
+            model.addAttribute("receiveId",id);
             return "receive_edit";
         }else{
             Integer issueId = id * -1; //ーを＋にする
@@ -161,6 +162,7 @@ public class InventoryController {
         model.addAttribute("category", ItemCategory.item);
         model.addAttribute("receiveForm",form);
         model.addAttribute("item",item);
+        model.addAttribute("receiveId",form.getReceiveId());
         return "receive_edit";
     }
 
@@ -194,7 +196,16 @@ public class InventoryController {
         Item item = itemService.selectOne(form.getItemId());
         model.addAttribute("category",ItemCategory.item);
         model.addAttribute("item",item);
+        String name;
+
         return "issue_edit";
+    }
+    @PostMapping("/receive/delete")
+    public String deleteReceive(@RequestParam("id") Integer receiveId){
+        //item.idが欲しい　receive.id -> inventory.id -> item.idの順で取ってくる
+        Integer inventoryId = service.findInventoryIdByReceiveId(receiveId);
+        Integer itemId = itemService.findByItemId(inventoryId);
+        return "redirect:/item/" + itemId;
     }
 
     private ReceiveForm setReceive(Receive r, Integer itemId) {
