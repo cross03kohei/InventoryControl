@@ -112,6 +112,11 @@ public class InventoryController {
             return "issue_edit";
         }
     }
+
+    /**
+     *入庫の更新処理　在庫数がゼロになると編集画面に戻る
+     * 在庫数は計算して更新処理を行う
+     */
     @PostMapping("receive/edit")
     public String postEditReceive(Model model, @ModelAttribute @Validated ReceiveForm form,
                                   BindingResult bindingResult){
@@ -119,21 +124,27 @@ public class InventoryController {
             return editReceive(model, form);
         }
         Integer stock = service.findStock(form.getInventoryId());
-        Receive receive = service.findReceive(form.getReceiveId());
+        Receive receive = service.findReceive(form.getReceiveId()); //formとの値の差を計算する　更新にも使う
         Integer difference = receive.getQuantity() - form.getReceiveQuantity();
         if(stock < difference) {
             model.addAttribute("result","在庫数が0になります");
             return editReceive(model, form);
         }
+        receive.setQuantity(form.getReceiveQuantity());
+        receive.setPrice(form.getPrice());
+        int stockEdit;      //計算する在庫数　＋の場合は引く　ーの場合は足す
         if(difference > 0) {
-            Integer stockEdit = stock - difference;
+            stockEdit = stock - difference;
+
         }else{
-            Integer stockEdit = stock + difference * -1;
-            System.out.println(stockEdit);
+            stockEdit = stock + difference * -1;
         }
+        boolean result = service.updateReceive(receive, form.getInventoryId(), stockEdit);
         return "redirect:/item/" + form.getItemId();
     }
-    //編集した際にエラーがあった際はこちらで受け取る
+    /**
+     * 編集の際にエラーがあった際はこちらで受け取る
+     */
     @GetMapping
     public String editReceive(Model model, @ModelAttribute ReceiveForm form){
         Item item = itemService.selectOne(form.getItemId());
@@ -161,6 +172,17 @@ public class InventoryController {
         form.setInventoryId(i.getInventoryId());
         form.setIssueQuantity(i.getQuantity());
         return form;
+    }
+
+    /**
+     *formの中身をmodelに詰めなおす
+     */
+    private Receive createReceive(ReceiveForm form) {
+        Receive r = new Receive();
+        r.setId(form.getReceiveId());
+        r.setPrice(form.getPrice());
+        r.setQuantity(form.getReceiveQuantity());
+        return r;
     }
 
 }

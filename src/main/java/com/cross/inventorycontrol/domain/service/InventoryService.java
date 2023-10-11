@@ -45,6 +45,16 @@ public class InventoryService {
     }
     public Integer findStock(Integer inventoryId){ return dao.findStock(inventoryId);}
     public Issue findIssue(Integer id){ return dao.findIssue(id);}
+
+    /**
+     *入庫の更新処理　同時に在庫数も更新する
+     */
+    @Transactional
+    public boolean updateReceive(Receive receive, Integer inventoryId, Integer stock) {
+        int rowNumber = dao.updateReceive(receive);
+        rowNumber = dao.updateInventory(inventoryId, stock);
+        return rowNumber > 1;
+    }
     private Inventory setIssueForm(IssueForm form){
         Inventory inventory = new Inventory();
         inventory.setInventoryId(form.getInventoryId());

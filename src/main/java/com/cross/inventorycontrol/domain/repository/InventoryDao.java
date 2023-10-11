@@ -95,6 +95,20 @@ public class InventoryDao {
         issue.setQuantity((Integer) map.get("issue_quantity"));
         return issue;
     }
+
+    /**
+     *inventoryの更新処理
+     */
+    public int updateInventory(Integer id, Integer stock) throws DataAccessException {
+        return jdbc.update("UPDATE inventory SET " +
+                "stock = ? WHERE inventory.id = ?",
+                stock,
+                id);
+    }
+
+    /**
+     *入庫の更新処理
+     */
     public int updateReceive(Receive receive) throws DataAccessException {
         return jdbc.update("UPDATE receive SET " +
                 "receive_quantity = ? , price = ? " +
