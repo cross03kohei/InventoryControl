@@ -107,6 +107,15 @@ public class ItemController {
         Integer id = form.getId();
         return getItemDetail(model,id);
     }
+
+    /**
+     *商品の削除
+     */
+    @PostMapping("/delete")
+    public String deleteItem(@RequestParam("id") Integer itemId) {
+        itemService.deleteItem(itemId);
+        return "redirect:/";
+    }
     private Item createItem(ItemForm form){
         Item item = new Item();
         item.setId(form.getId());

@@ -1,9 +1,12 @@
 package com.cross.inventorycontrol.domain.service;
 
+import com.cross.inventorycontrol.domain.model.Inventory;
 import com.cross.inventorycontrol.domain.model.Item;
+import com.cross.inventorycontrol.domain.repository.InventoryDao;
 import com.cross.inventorycontrol.domain.repository.ItemDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -11,6 +14,8 @@ import java.util.List;
 public class ItemService {
     @Autowired
     ItemDao dao;
+    @Autowired
+    InventoryDao inventoryDao;
 
     /**
      *itemの登録処理　同時に在庫数を初期化 = 0
@@ -57,4 +62,17 @@ public class ItemService {
      *inventory.idからitem.idを取得
      */
     public Integer findByItemId(Integer id) { return dao.findItemId(id);}
+
+    /**
+     *商品に紐づく全てのデータを削除する
+     */
+    @Transactional
+    public boolean deleteItem(Integer itemId) {
+        Integer inventoryId = dao.findInventoryId(itemId);
+        inventoryDao.deleteIssueByInventory(inventoryId);
+        inventoryDao.deleteReceiveByInventory(inventoryId);
+        inventoryDao.deleteInventory(inventoryId);
+        int rowNumber = dao.deleteItem(itemId);
+        return rowNumber > 0;
+    }
 }

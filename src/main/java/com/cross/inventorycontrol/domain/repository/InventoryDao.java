@@ -187,4 +187,28 @@ public class InventoryDao {
         return jdbc.update("DELETE FROM issue WHERE issue.id = ?",
                 issueId);
     }
+
+    /**
+     *商品下の入庫の削除
+     */
+    public int deleteReceiveByInventory(Integer inventoryId) throws DataAccessException {
+        return jdbc.update("DELETE FROM receive WHERE inventory_id = ?",
+                inventoryId);
+    }
+
+    /**
+     *商品下の出庫の削除
+     */
+    public int deleteIssueByInventory(Integer inventoryId) throws DataAccessException {
+        return jdbc.update("DELETE FROM issue WHERE inventory_id = ?",
+                inventoryId);
+    }
+
+    /**
+     *在庫の削除
+     */
+    public int deleteInventory(Integer inventoryId) throws DataAccessException {
+        return jdbc.update("DELETE FROM inventory WHERE inventory.id = ?",
+                inventoryId);
+    }
 }

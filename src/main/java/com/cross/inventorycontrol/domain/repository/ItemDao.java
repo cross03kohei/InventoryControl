@@ -78,6 +78,14 @@ public class ItemDao {
                 "WHERE inventory.id = ?", id);
         return (Integer) map.get("item_id");
     }
+
+    /**
+     *商品の削除
+     */
+    public int deleteItem(Integer itemId) throws DataAccessException {
+        return jdbc.update("DELETE FROM item WHERE item.id = ?",
+                itemId);
+    }
     private Item createItem(Map<String, Object> map){
         Item i = new Item();
         i.setId((Integer) map.get("id"));

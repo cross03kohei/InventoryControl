@@ -26,6 +26,9 @@
     <a class="btn btn-primary" th:href="@{'/inventory/receive/' + ${item.id}}">入庫</a>
     <a class="btn btn-success" th:href="@{'/inventory/issue/' + ${item.id}}">出庫</a>
     <a class="btn btn-secondary" th:href="@{'edit/' + ${item.id}}">編集</a>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        削除
+    </button>
     <table class="table table-bordered table-hover">
         <thead class="thead-dark">
         <tr>
@@ -44,5 +47,25 @@
             </tr>
         </tbody>
     </table>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/item/delete}" method="post">
+                    <div class="modal-body">
+                        <h5>削除しますか？</h5>
+                        <input type="hidden" th:value="${item.id}" name="id">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                        <button type="submit" class="btn btn-danger">削除</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
