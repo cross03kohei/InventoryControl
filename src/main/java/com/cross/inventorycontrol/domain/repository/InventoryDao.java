@@ -171,4 +171,20 @@ public class InventoryDao {
                 receiveId);
         return (Integer) map.get("inventory_id");
     }
+
+    /**
+     *入庫履歴を一件削除
+     */
+    public int deleteReceive(Integer receiveId) throws DataAccessException {
+        return jdbc.update("DELETE FROM receive WHERE receive.id = ?",
+                receiveId);
+    }
+
+    /**
+     *出庫履歴を一件削除
+     */
+    public int deleteIssue(Integer issueId) throws DataAccessException {
+        return jdbc.update("DELETE FROM issue WHERE issue.id = ?",
+                issueId);
+    }
 }

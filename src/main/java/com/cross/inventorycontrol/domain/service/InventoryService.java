@@ -94,6 +94,32 @@ public class InventoryService {
     }
 
     /**
+     *入庫履歴を一件削除 入庫数の分だけ在庫数を減らす
+     */
+    @Transactional
+    public boolean deleteReceive(Integer receiveId) {
+        Receive receive = dao.findReceive(receiveId);
+        Integer stock = dao.findStock(receive.getInventoryId());
+        Integer quantity = receive.getQuantity();
+        int rowNumber = dao.updateInventory(receive.getInventoryId(), stock - quantity);
+        rowNumber += dao.deleteReceive(receiveId);
+        return rowNumber > 1;
+    }
+
+    /**
+     *出庫履歴を一件削除し、出庫数の数だけ在庫数を増やす inventory.idを返す
+     */
+    @Transactional
+    public Integer deleteIssue(Integer issueId) {
+        Issue issue = dao.findIssue(issueId);
+        Integer issueQuantity = issue.getQuantity();
+        Integer stock = dao.findStock(issue.getInventoryId());
+        int rowNumber = dao.updateInventory(issue.getInventoryId(), stock + issueQuantity);
+        rowNumber += dao.deleteIssue(issueId);
+        return issue.getInventoryId();
+    }
+
+    /**
      *formの記述をmodelに変換　同時に登録日付を登録　秒数まで
      */
     private Inventory setIssueForm(IssueForm form){

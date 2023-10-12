@@ -121,6 +121,7 @@ public class InventoryController {
             IssueForm form = setIssue(issue, itemId);
             model.addAttribute("item",item);
             model.addAttribute("issueForm",form);
+            model.addAttribute("issueId",issueId);
             return "issue_edit";
         }
     }
@@ -196,14 +197,40 @@ public class InventoryController {
         Item item = itemService.selectOne(form.getItemId());
         model.addAttribute("category",ItemCategory.item);
         model.addAttribute("item",item);
+        model.addAttribute("issueId", form.getIssueId());
         String name;
 
         return "issue_edit";
     }
+
+    /**
+     *入庫の一件削除　在庫数が0になる場合は削除できない
+     */
     @PostMapping("/receive/delete")
-    public String deleteReceive(@RequestParam("id") Integer receiveId){
+    public String deleteReceive(@RequestParam("id") Integer receiveId, Model model){
         //item.idが欲しい　receive.id -> inventory.id -> item.idの順で取ってくる
         Integer inventoryId = service.findInventoryIdByReceiveId(receiveId);
+        Integer itemId = itemService.findByItemId(inventoryId);
+        Integer stock = service.findStock(inventoryId);
+        Receive receive = service.findReceive(receiveId);
+        if(stock < receive.getQuantity()){          //在庫数より入庫数が上回った場合
+            model.addAttribute("result","在庫数が0になるため削除できません");
+            ReceiveForm form = setReceive( receive, itemId);
+            return editReceive(model, form);
+        }
+        boolean result = service.deleteReceive(receiveId);
+        if (result){
+            System.out.println("削除成功");
+        }
+        return "redirect:/item/" + itemId;
+    }
+
+    /**
+     *出庫の削除機能
+     */
+    @PostMapping("/issue/delete")
+    public String deleteIssue(Model model, @RequestParam("id") Integer issueId) {
+        Integer inventoryId = service.deleteIssue(issueId); //削除して在庫のIDを取得
         Integer itemId = itemService.findByItemId(inventoryId);
         return "redirect:/item/" + itemId;
     }
