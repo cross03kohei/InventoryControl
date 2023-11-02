@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -28,6 +30,18 @@ public class ItemService {
         int rowNumber = dao.insertOne(item);
         Integer id = dao.lastInsertId();    //insertしたIDを取得
         rowNumber = dao.insertInventory(id,stock);
+        if (stock > 0){ //在庫が０を上回ると入庫登録も行う
+            Inventory inventory = new Inventory();
+            Integer inventoryId = dao.lastInsertId(); //insertしたinventoryのIDを取得
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            inventory.setDate(now.format(f)); //日付をセット
+            inventory.setInventoryId(inventoryId);  //外部キーをセット
+            inventory.setQuantity(stock);       //入庫数もセット
+            inventory.setPrice(0);   //金額は0に
+            rowNumber = inventoryDao.insertReceive(inventory);      //保存
+        }
+
         return rowNumber > 0;
     }
 
