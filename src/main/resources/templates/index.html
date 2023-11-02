@@ -4,6 +4,10 @@
 </head>
 <body>
 <a th:href="@{/item/add}">アイテム追加</a>
+<p class="text-danger" th:text="${result}"></p>
+<ul>
+    <li class="text-danger" th:each=" limitItem : ${limitItems}" th:text="${limitItem}"></li>
+</ul>
 <table class="table table-bordered table-hover">
     <thead class="thead-dark">
     <tr>

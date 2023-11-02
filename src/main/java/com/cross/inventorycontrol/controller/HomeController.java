@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -17,6 +18,16 @@ public class HomeController {
     @GetMapping("/")
     public String Home(Model model){
         List<Item> items = itemService.selectMany();
+        List<String> limitItems = new ArrayList<>();
+        for (Item item : items) {
+            if (item.getStock() < item.getLowerLimit()) {
+                limitItems.add(item.getItemName());
+            }
+        }
+        if (limitItems.size() > 0)  {
+            model.addAttribute("limitItems",limitItems);
+            model.addAttribute("result","下限を下回っているアイテムがあります");
+        }
         model.addAttribute("items",items);
         model.addAttribute("category", ItemCategory.item);
         return "index";
